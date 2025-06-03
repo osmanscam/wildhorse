@@ -1,0 +1,9 @@
+{
+  "name": "wildhorse",
+  "version": "1.0.0",
+  "description": "React typeahead search example",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "license": "MIT"
+}
