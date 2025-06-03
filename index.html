@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Typeahead Search</title>
+  <title>React Typeahead Search</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -22,12 +22,13 @@
       background-color: #f0f0f0;
     }
   </style>
+  <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 </head>
 <body>
-  <h1>Typeahead Search Box</h1>
-  <input type="text" id="search" placeholder="Search..." autocomplete="off" />
-  <div id="suggestions"></div>
-  <script>
+  <div id="root"></div>
+  <script type="text/babel">
     const data = [
       'apple',
       'banana',
@@ -39,26 +40,34 @@
       'honeydew'
     ];
 
-    const input = document.getElementById('search');
-    const suggestions = document.getElementById('suggestions');
+    function Typeahead() {
+      const [query, setQuery] = React.useState('');
+      const matches = query
+        ? data.filter(item => item.toLowerCase().startsWith(query.toLowerCase()))
+        : [];
 
-    input.addEventListener('input', () => {
-      const query = input.value.toLowerCase();
-      suggestions.innerHTML = '';
-      if (!query) {
-        return;
-      }
-      const matches = data.filter(item => item.toLowerCase().startsWith(query));
-      matches.forEach(item => {
-        const div = document.createElement('div');
-        div.textContent = item;
-        div.addEventListener('click', () => {
-          input.value = item;
-          suggestions.innerHTML = '';
-        });
-        suggestions.appendChild(div);
-      });
-    });
+      return (
+        <div>
+          <h1>Typeahead Search Box</h1>
+          <input
+            type="text"
+            placeholder="Search..."
+            autoComplete="off"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+          />
+          <div id="suggestions">
+            {matches.map(item => (
+              <div key={item} onClick={() => setQuery(item)}>
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<Typeahead />, document.getElementById('root'));
   </script>
 </body>
 </html>
